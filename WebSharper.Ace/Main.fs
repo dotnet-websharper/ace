@@ -20,14 +20,14 @@ module Definition =
         Class "Document"
 
     let Position =
-        Pattern.Config "Position" {
-            Required =
-                [
-                    "row", Integer
-                    "column", Integer
-                ]
-            Optional = []
-        }
+        Class "Position"
+        |+> Static [
+            Constructor T
+        ]
+        |+> Instance [
+            "row" =@ Integer
+            "column" =@ Integer
+        ]
     
     let Anchor =
         Class "Anchor"
@@ -61,9 +61,10 @@ module Definition =
             Constructor (Integer * Integer * Integer * Integer)
         ]
         |+> Instance [
-            /// Undocumented members
-            "isEmpty" => T ^-> Boolean
+            "start" =@ Position
+            "end" =@ Position
 
+            "isEmpty" => T ^-> Boolean
             "clipRows" => Integer * Integer ^-> TSelf
             "clone" => T ^-> TSelf
             "collapseRows" => TSelf
@@ -138,6 +139,9 @@ module Definition =
             "setValue" => String ^-> T
         ]
 
+    let Selection =
+        Class "Selection"
+
     let ES =
         EditSession
         |+> Static [
@@ -175,7 +179,7 @@ module Definition =
             "getScreenWidth" => T ^-> Integer
             "getScrollLeft" => T ^-> Integer
             "getScrollTop" => T ^-> Integer
-            "getSelection" => T ^-> String
+            "getSelection" => T ^-> Selection
             "getState" => Integer ^-> String
             "getTabSize" => T ^-> Integer
             "getTabString" => T ^-> String
@@ -299,8 +303,8 @@ module Definition =
             "setOptions" => Object ^-> T
         ]
 
-    let Selection =
-        Class "Selection"
+    let SelectionClass =
+        Selection
         |+> Static [
             Constructor EditSession
         ]
@@ -460,12 +464,49 @@ module Definition =
             "visualizeFocus" => T ^-> T
         ]
 
+    let Keybinding =
+        Pattern.Config "Keybinding" {
+            Required = []
+            Optional =
+                [
+                    "win", String
+                    "mac", String
+                ]
+        }
+
+    let CommandConfig =
+        Pattern.Config "CommandConfig" {
+            Required = []
+            Optional =
+                [
+                    "name", String
+                    "bindKey", Keybinding.Type
+                    "exec", (Editor ^-> T)
+                ]
+        }
+
+    let CommandCollection =
+        Class "CommandCollection"
+        |+> Instance [
+            "addCommand" => CommandConfig ^-> T
+        ]
+
     let EditorClass =
         Editor
         |+> Static [
             Constructor (VirtualRenderer * ES)
         ]
         |+> Instance [
+            "commands" =? CommandCollection
+
+            "addSelectionMarker" => Range ^-> Range
+            "alignCursors" => T ^-> T
+            "blockOutdent" => T ^-> T
+            "blur" => T ^-> T
+            "centerSelection" => T ^-> T
+            "clearSelection" => T ^-> T
+            "copyLinesDown" => T ^-> Integer
+            "copyLinesUp" => T ^-> Integer
             "setValue" => String * !? Integer ^-> T
             "getValue" => T ^-> String
             "getSession" => T ^-> EditSession
@@ -477,7 +518,7 @@ module Definition =
         ]
 
     let cdn resource =
-        "http://cdn.jsdelivr.net/ace/1.2.0/min/" + resource + ".js"
+        "http://cdn.jsdelivr.net/ace/1.2.2/min/" + resource + ".js"
 
     let Assembly =
         Assembly [
@@ -492,13 +533,13 @@ module Definition =
                  Position
                  NewLineMode
                  Anchor
+                 Selection
+                 CommandCollection
+                 CommandConfig
+                 Keybinding
             ]
             Namespace "WebSharper.Ace.Resources" [
-                (Resource "Ace" (cdn "ace")).AssemblyWide()
-            ]
-            Namespace "WebSharper.Ace.Resources.Mode" [
-                Resource "OCaml" (cdn "mode-ocaml")
-                Resource "HTML" (cdn "mode-html")
+                Resource "Ace" (cdn "ace")
             ]
         ]
 
