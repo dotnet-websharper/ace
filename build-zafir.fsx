@@ -3,13 +3,13 @@
 open IntelliFactory.Build
 
 let bt =
-    BuildTool().PackageId("Zafir.Ace")
-        .VersionFrom("Zafir")
+    BuildTool().PackageId("WebSharper.Ace")
+        .VersionFrom("WebSharper")
         .WithFSharpVersion(FSharpVersion.FSharp30)
         .WithFramework(fun x -> x.Net40)
 
 let extension =
-    bt.Zafir.Extension("WebSharper.Ace")
+    bt.WebSharper4.Extension("WebSharper.Ace")
         .SourcesFromProject()
 
 bt.Solution [
@@ -18,7 +18,7 @@ bt.Solution [
     bt.NuGet.CreatePackage()
         .Configure(fun configuration ->
             { configuration with
-                Title = Some "Zafir.Ace"
+                Title = Some "WebSharper.Ace"
                 LicenseUrl = Some "http://websharper.com/licensing"
                 ProjectUrl = Some "https://bitbucket.org/intellifactory/websharper.ace"
                 Description = "WebSharper bindings for Ace."
