@@ -1,0 +1,17 @@
+type file
+id WebSharper.Ace
+authors
+    IntelliFactory
+owners
+    IntelliFactory
+licenseUrl http://websharper.com/licensing
+projectUrl https://bitbucket.org/intellifactory/websharper.ace
+description
+    WebSharper bindings for Ace.
+tags
+    Web JavaScript F# C#
+files
+    ../WebSharper.Ace/bin/Release/netstandard2.0/WebSharper.Ace.dll ==> lib/netstandard2.0
+    ../WebSharper.Ace/bin/Release/netstandard2.0/WebSharper.Ace.xml ==> lib/netstandard2.0
+dependencies
+        WebSharper LOCKEDVERSION

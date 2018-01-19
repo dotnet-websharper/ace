@@ -1,29 +1,17 @@
-#load "tools/includes.fsx"
+#load "paket-files/build/intellifactory/websharper/tools/WebSharper.Fake.fsx"
+open Fake
+open WebSharper.Fake
 
-open IntelliFactory.Build
+let targets =
+    GetSemVerOf "WebSharper"
+    |> ComputeVersion
+    |> WSTargets.Default
+    |> MakeTargets
 
-let bt =
-    BuildTool().PackageId("WebSharper.Ace")
-        .VersionFrom("WebSharper", versionSpec = "(,4.0)")
-        .WithFSharpVersion(FSharpVersion.FSharp30)
-        .WithFramework(fun x -> x.Net40)
+Target "Build" DoNothing
+targets.BuildDebug ==> "Build"
 
-let extension =
-    bt.WebSharper.Extension("WebSharper.Ace")
-        .SourcesFromProject()
+Target "CI-Release" DoNothing
+targets.CommitPublish ==> "CI-Release"
 
-bt.Solution [
-    extension
-    
-    bt.NuGet.CreatePackage()
-        .Configure(fun configuration ->
-            { configuration with
-                Title = Some "WebSharper.Ace"
-                LicenseUrl = Some "http://websharper.com/licensing"
-                ProjectUrl = Some "https://bitbucket.org/intellifactory/websharper.ace"
-                Description = "WebSharper bindings for Ace."
-                Authors = [ "IntelliFactory" ]
-                RequiresLicenseAcceptance = true })
-        .Add(extension)
-]
-|> bt.Dispatch
+RunTargetOrDefault "Build"
