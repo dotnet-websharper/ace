@@ -399,10 +399,10 @@ NUGET
       Microsoft.NETCore.Targets (>= 1.1) - restriction: || (&& (== net461) (>= dnxcore50)) (&& (== net461) (< net451)) (== netstandard2.0)
       System.Runtime (>= 4.3) - restriction: || (&& (== net461) (>= dnxcore50)) (&& (== net461) (< net451)) (== netstandard2.0)
   remote: https://daily.websharper.com/nuget
-    WebSharper (4.7.0.417)
+    WebSharper (4.7.0.423)
       FSharp.Core (>= 4.2.3)
-    WebSharper.FSharp (4.7.0.417)
-      WebSharper (4.7.0.417)
+    WebSharper.FSharp (4.7.0.423)
+      WebSharper (4.7.0.423)
 
 GROUP build
 RESTRICTION: == net45
@@ -412,8 +412,8 @@ NUGET
       FSharp.Core
     FAKE (5.16)
     FSharp.Compiler.Tools (10.2.3)
-    FSharp.Core (4.7.2)
-    Mono.Cecil (0.11.2)
+    FSharp.Core (5.0)
+    Mono.Cecil (0.11.3)
     Newtonsoft.Json (12.0.3)
     Paket.Core (5.141)
       Chessie (>= 0.6)
