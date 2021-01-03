@@ -16,4 +16,4 @@ files
     ../WebSharper.Ace/bin/Release/netstandard2.0/WebSharper.Ace.dll ==> lib/netstandard2.0
     ../WebSharper.Ace/bin/Release/netstandard2.0/WebSharper.Ace.xml ==> lib/netstandard2.0
 dependencies
-        WebSharper ~> LOCKEDVERSION/3
+        WebSharper ~> LOCKEDVERSION:[3]
