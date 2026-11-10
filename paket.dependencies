@@ -6,9 +6,9 @@ framework: netstandard2.0, net10.0
 strategy: min
 storage: none
 
-nuget WebSharper prerelease
-nuget WebSharper.FSharp prerelease
-nuget WebSharper.UI prerelease
+nuget WebSharper ~> 11.0 prerelease
+nuget WebSharper.FSharp ~> 11.0 prerelease
+nuget WebSharper.UI ~> 11.0 prerelease
 
 group wsbuild
     git https://github.com/dotnet-websharper/build-script websharper80
