@@ -2,7 +2,7 @@
   "name": "WebSharper.Ace.Sample",
   "version": "1.0.0",
   "devDependencies": {
-    "esbuild": "^0.19.9"
+    "esbuild": "^0.28.1"
   },
   "dependencies": {
     "ace-builds": "^1.45.2"
