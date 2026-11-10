@@ -6,11 +6,7 @@
     <title>WebSharper.Ace — sample</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Cpath d='M8 3.2 2.6 12.8h2.2L8 7.2l3.2 5.6h2.2z' fill='white'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="css/index.css" />
-    <style>
-        /* Don't show the not-yet-loaded template. */
-        [ws-template], [ws-children-template] { display: none; }
-    </style>
-    <!-- The binding links Ace here (AssemblyWide resource). -->
+    <!-- Ace is bundled from npm; the WebSharper head is folded in here. -->
     <!-- ws-head -->
 </head>
 <body>
@@ -23,7 +19,6 @@
     </header>
 
     <main class="page">
-        <div id="main" ws-children-template="Main">
             <section class="card">
                 <header class="card-header">
                     <h2>Toolbar</h2>
@@ -95,7 +90,6 @@
                 </dl>
                 <p class="status">${status}</p>
             </section>
-        </div>
 
         <section class="card editor-card">
             <div id="editor"></div>

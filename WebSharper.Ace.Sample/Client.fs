@@ -237,36 +237,9 @@ module Client =
 
     [<SPAEntryPoint>]
     let Main () =
-        let options = EditorOptions()
-        options.Theme <- "ace/theme/monokai"
-        options.Mode <- "ace/mode/fsharp"
-        options.FontSize <- "14px"
-        options.TabSize <- 2
-        options.ShowPrintMargin <- false
-        options.HighlightActiveLine <- true
-        options.UseSoftTabs <- true
-        // Ace's background workers (linting/autocomplete) are loaded by URL, not
-        // bundled. This sample does not need them, so turn them off; supply
-        // `worker-*.js` and set `ace.config` if you want them.
-        options.UseWorker <- false
-
-        // `ace.edit` accepts a DOM element or an element **id** (not a CSS
-        // selector), so we pass the id of the container.
-        let editor = Ace.Edit("editor", options)
-        editor.SetValue startCode |> ignore
-        editor.ClearSelection()
-        editor.Focus()
-        editorOpt <- Some editor
-
-        // Live updates: the editor tells us when it changes.
-        editor.On("change", fun _ -> refreshInfo ()) |> ignore
-        editor.On("changeSelection", fun _ -> refreshCursor ()) |> ignore
-
-        status := "Ace " + Ace.Version + " is ready — start typing."
-        refreshInfo ()
-        refreshCursor ()
-
-        IndexTemplate.Main()
+        // `.Bind()` renders the whole document body, so the template (including
+        // the #editor container) is in the DOM only after this call.
+        IndexTemplate()
             .status(status.V)
             .cursor(cursor.V)
             .selection(selection.V)
@@ -297,5 +270,34 @@ module Client =
             .toggleWrap(fun _ -> toggleWrap ())
             .toggleInvisibles(fun _ -> toggleInvisibles ())
             .probeApi(fun _ -> probeApi ())
-            .Doc()
-        |> Doc.RunById "main"
+            .Bind()
+
+        // The template is now in the DOM; create the editor in its container.
+        let options = EditorOptions()
+        options.Theme <- "ace/theme/monokai"
+        options.Mode <- "ace/mode/fsharp"
+        options.FontSize <- "14px"
+        options.TabSize <- 2
+        options.ShowPrintMargin <- false
+        options.HighlightActiveLine <- true
+        options.UseSoftTabs <- true
+        // Ace's background workers (linting/autocomplete) are loaded by URL, not
+        // bundled. This sample does not need them, so turn them off; supply
+        // `worker-*.js` and set `ace.config` if you want them.
+        options.UseWorker <- false
+
+        // `ace.edit` accepts a DOM element or an element **id** (not a CSS
+        // selector), so we pass the id of the container.
+        let editor = Ace.Edit("editor", options)
+        editor.SetValue startCode |> ignore
+        editor.ClearSelection()
+        editor.Focus()
+        editorOpt <- Some editor
+
+        // Live updates: the editor tells us when it changes.
+        editor.On("change", fun _ -> refreshInfo ()) |> ignore
+        editor.On("changeSelection", fun _ -> refreshCursor ()) |> ignore
+
+        status := "Ace " + Ace.Version + " is ready — start typing."
+        refreshInfo ()
+        refreshCursor ()
