@@ -1,6 +1,6 @@
 # WebSharper.Ace
 
-[![NuGet](https://img.shields.io/badge/nuget-not%20published-lightgrey)](https://github.com/dotnet-websharper/ace)
+[![NuGet](https://img.shields.io/nuget/v/WebSharper.Ace.svg)](https://www.nuget.org/packages/WebSharper.Ace)
 
 WebSharper bindings for the [Ace editor](https://ace.c9.io/) (Ace 1.45.x) —
 creating editors, edit sessions, documents, ranges, selections, search, markers,
@@ -58,20 +58,17 @@ invisibles, read-only and a Position/Range/Anchor/Token API tour.
 
 ## Installation
 
-The binding is not currently published to NuGet. Reference the project from
-source:
-
 ```bash
-git clone https://github.com/dotnet-websharper/ace.git
+dotnet add package WebSharper.Ace
 ```
 
-```xml
-<ItemGroup>
-  <ProjectReference Include="path/to/WebSharper.Ace/WebSharper.Ace.fsproj" />
-</ItemGroup>
+Or with Paket:
+
+```fsharp
+nuget WebSharper.Ace
 ```
 
-The binding targets `netstandard2.0` and works with WebSharper 10 and 11.
+The package targets `netstandard2.0` and works with WebSharper 10 and 11.
 
 It references the npm package `ace-builds`, so add it to your front-end
 dependencies (WebSharper records it as an `NpmDependencies` entry):
