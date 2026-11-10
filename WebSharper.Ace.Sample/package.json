@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "devDependencies": {
     "esbuild": "^0.19.9"
+  },
+  "dependencies": {
+    "ace-builds": "^1.45.2"
   }
 }

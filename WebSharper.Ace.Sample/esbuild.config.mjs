@@ -3,8 +3,10 @@ import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'fs'
 
 const name = 'WebSharper.Ace.Sample'
 
+// `entry.mjs` imports the npm `ace-builds` core plus the modes/themes the
+// sample uses, then the WebSharper-generated bundle.
 await build({
-  entryPoints: [`./build/${name}.js`],
+  entryPoints: ['./entry.mjs'],
   bundle: true,
   minify: true,
   format: 'iife',
@@ -15,9 +17,8 @@ await build({
 mkdirSync('../dist/css', { recursive: true })
 copyFileSync('./css/index.css', '../dist/css/index.css')
 
-// Inject the WebSharper head into the page. This is where the binding's
-// AssemblyWide Ace resource is emitted as a <script> tag, so the sample loads
-// the very Ace build the binding is written against.
+// Fold the WebSharper head into the page. Ace is bundled from npm, so the head
+// is normally empty, but this keeps the mechanism for any linked resources.
 const head = readFileSync(`./build/${name}.head.html`, 'utf8')
 const html = readFileSync('./index.html', 'utf8').replace('<!-- ws-head -->', head)
 writeFileSync('../dist/index.html', html)

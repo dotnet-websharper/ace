@@ -245,6 +245,10 @@ module Client =
         options.ShowPrintMargin <- false
         options.HighlightActiveLine <- true
         options.UseSoftTabs <- true
+        // Ace's background workers (linting/autocomplete) are loaded by URL, not
+        // bundled. This sample does not need them, so turn them off; supply
+        // `worker-*.js` and set `ace.config` if you want them.
+        options.UseWorker <- false
 
         // `ace.edit` accepts a DOM element or an element **id** (not a CSS
         // selector), so we pass the id of the container.

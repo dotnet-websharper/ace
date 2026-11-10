@@ -19,7 +19,7 @@ Ace but missing before; **kept** = already matched Ace.
 
 | Member | Old binding | Ace 1.45 | Now |
 | --- | --- | --- | --- |
-| source name | `Class "ace"` with `WithSourceName "Ace"` | global `ace` | kept (JS name `ace`) |
+| source name | `Class "ace"` with `WithSourceName "Ace"` | the `ace` export | kept (JS name `ace`, imported) |
 | `edit` | `(string + Element) -> Editor` only | `edit(el?: string \| HTMLElement \| null, options?) -> Editor` | **fixed**: `Edit(string, options?)` and `Edit(Element, options?)`; the string is an element **id** (`getElementById`) |
 | `createEditSession` | `(Document + string) * string -> EditSession`, mode required | `createEditSession(text: Document \| string, mode?) -> EditSession` | **fixed**: two overloads, optional mode |
 | `require` | `string -> obj` | `require(name: string): any` | kept |
@@ -51,7 +51,7 @@ Ace but missing before; **kept** = already matched Ace.
 
 | Member | Old binding | Ace 1.45 | Now |
 | --- | --- | --- | --- |
-| constructor | `(string + string[])` | `new Document(string \| string[])` | binding exposes no constructor (not on the global `ace`) |
+| constructor | `(string + string[])` | `new Document(string \| string[])` | binding exposes no constructor (not exported by `ace-builds`) |
 | `getLinea` | **typo**, `(int * int) -> string[]` | `getLines(firstRow, lastRow): string[]` | **fixed** (renamed `GetLines`) |
 | `getTextRange` | `(Range) -> string` | `(IRange) -> string` | kept |
 | `removeLines` | `-> string` | `-> string[]` | **fixed** |
@@ -142,12 +142,12 @@ The members now live on `Selection`.
 
 | Member | Old binding | Ace 1.45 | Now |
 | --- | --- | --- | --- |
-| `Tokenizer` constructor | `(obj, string)` | `(rules)` | **fixed** (ctor not exposed: not on the global `ace`) |
+| `Tokenizer` constructor | `(obj, string)` | `(rules)` | **fixed** (ctor not exposed: not exported by `ace-builds`) |
 | `Tokenizer.getLineTokens` | `(obj, obj) -> obj` | `(line, state) -> { tokens, state }` | **fixed** |
 | `BackgroundTokenizer` constructor | `(Tokenizer, Editor)` | `(tokenizer, session?)` | fixed (ctor not exposed) |
 | `fireUpdateEvents` | **typo + plural** | `fireUpdateEvent(firstRow, lastRow)` | **fixed** |
 | `start`, `getState`, `getTokens`, `scheduleStart`, `cleanup` | partial/missing | present | **fixed/added** |
-| `TokenIterator` constructor | `(EditSession, int, int)` | present, but not on the global `ace` | binding exposes no constructor (use `session.GetTokenAt`) |
+| `TokenIterator` constructor | `(EditSession, int, int)` | present, but not exported by `ace-builds` | binding exposes no constructor (use `session.GetTokenAt`) |
 | `stepForward` / `stepBackward` / `getCurrentToken` | `-> string` | `-> Token \| null` | **fixed** (`Token`) |
 | `getCurrentTokenPosition`, `getCurrentTokenRange` | missing | present | **added** |
 
@@ -186,11 +186,11 @@ types exactly:
 3. **`SyntaxMode` / theme objects are not modelled.** Mode and theme parameters
    are strings (`"ace/mode/fsharp"`, `"ace/theme/monokai"`); `getMode()` returns
    `obj`.
-4. **Only globally-exposed classes are constructible.** `Range`, `Editor`,
-   `EditSession`, `UndoManager` and `VirtualRenderer` exist on the `ace` object
-   in the `noconflict` build and have constructors. `Document`, `Anchor`,
-   `Selection`, `Tokenizer`, `BackgroundTokenizer`, `TokenIterator`, `Search`
-   and `CommandManager` are obtained from the editor/session/document.
+4. **Only the classes exported by `ace-builds` are constructible.** `Range`,
+   `Editor`, `EditSession`, `UndoManager` and `VirtualRenderer` are exported by
+   the package and have constructors. `Document`, `Anchor`, `Selection`,
+   `Tokenizer`, `BackgroundTokenizer`, `TokenIterator`, `Search` and
+   `CommandManager` are obtained from the editor/session/document.
 5. **Event payloads are `obj`.** Ace's typed event maps are documented in
    `ace.d.ts`; the binding exposes `On(name, obj -> unit)`.
 6. **`Document.getRowSplitData`** is typed `string`, though Ace can return
@@ -198,14 +198,19 @@ types exactly:
 7. **`Selection.toJSON`** is typed `Range`, though Ace can return `Range[]`.
 8. **`Editor.find`** is typed `Range`, though Ace can return `false`/`null`.
 
-## Resource
+## Packaging: npm import instead of a CDN `<script>`
 
-The binding links the non-conflict Ace build from jsDelivr as an
-`AssemblyWide` resource:
+The old binding linked a single `ace.js` from a CDN as an `AssemblyWide`
+resource (`http://cdn.jsdelivr.net/ace/1.2.2/min/ace.js`). The binding now
+imports the npm package [`ace-builds`](https://www.npmjs.com/package/ace-builds):
 
-```
-https://cdn.jsdelivr.net/npm/ace-builds@1.45.2/src-min-noconflict/ace.js
-```
+- `ace` is `import * as ace from "ace-builds/src-noconflict/ace"`;
+- `Range`, `Editor`, `EditSession`, `UndoManager` and `VirtualRenderer` are
+  named imports from the same module;
+- the binding declares `ace-builds` in `NpmDependencies`, so consumers install
+  it from npm and bundle it (esbuild in the sample).
 
-The old binding pointed at `http://cdn.jsdelivr.net/ace/1.2.2/min/ace.js`
-(insecure, long-unmaintained path, Ace 1.2.2).
+No `<script>` tag is emitted. Modes, themes and workers are the consumer's
+responsibility: import the `mode-*`/`theme-*` modules (see `entry.mjs` in the
+sample) and either import or disable the background workers
+(`EditorOptions.UseWorker <- false`).

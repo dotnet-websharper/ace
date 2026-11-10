@@ -6,16 +6,17 @@ WebSharper bindings for the [Ace editor](https://ace.c9.io/) (Ace 1.45.x) —
 creating editors, edit sessions, documents, ranges, selections, search, markers,
 commands and themes from F# and C# web apps.
 
-The binding loads `ace.js` from jsDelivr as an `AssemblyWide` resource, so any
-page using the binding gets the matching Ace build automatically. The editor is
-created as usual with `ace.edit(...)`; this binding exposes that as
-`Ace.Edit(...)`.
+The binding consumes the npm package [`ace-builds`](https://www.npmjs.com/package/ace-builds)
+as an ES module (`import ... from "ace-builds/src-noconflict/ace"`) and is
+bundled by your toolchain (esbuild in the sample) — there is no CDN `<script>`
+tag. The editor is created as usual with `ace.edit(...)`; this binding exposes
+that as `Ace.Edit(...)`.
 
 This repository contains:
 
 | Project | Purpose |
 | --- | --- |
-| `WebSharper.Ace` | The binding: WIG definitions for `Ace`, `Editor`, `EditSession`, `Document`, `Range`, `Position`, `Anchor`, `Selection`, `Search`, `UndoManager`, `VirtualRenderer`, `Tokenizer`, `BackgroundTokenizer`, `TokenIterator`, `CommandManager`, `Command`, the option/config objects and the `Ace` resource. |
+| `WebSharper.Ace` | The binding: WIG definitions for `Ace`, `Editor`, `EditSession`, `Document`, `Range`, `Position`, `Anchor`, `Selection`, `Search`, `UndoManager`, `VirtualRenderer`, `Tokenizer`, `BackgroundTokenizer`, `TokenIterator`, `CommandManager`, `Command`, and the option/config objects. |
 | `WebSharper.Ace.Sample` | A WebSharper SPA (esbuild → `dist/`) that wires the whole surface into a working editor with a toolbar. |
 
 ## Live demos
@@ -35,7 +36,7 @@ invisibles, read-only and a Position/Range/Anchor/Token API tour.
 
 ## Features
 
-- `Ace` (the global `ace` object): `edit`, `createEditSession`, `require`,
+- `Ace` (the `ace` object): `edit`, `createEditSession`, `require`,
   `config`, `version`, and overloads for the element/id and option forms.
 - `Editor`: value, session, selection, theme, font, read-only, options,
   commands, navigation, search & replace, multi-select helpers, and events.
@@ -67,6 +68,23 @@ git clone https://github.com/dotnet-websharper/ace.git
 ```
 
 The binding targets `netstandard2.0` and works with WebSharper 10 and 11.
+
+It references the npm package `ace-builds`, so add it to your front-end
+dependencies (WebSharper records it as an `NpmDependencies` entry):
+
+```bash
+npm install ace-builds@^1.45.2
+```
+
+Ace loads modes, themes and background workers on demand. When you bundle Ace
+instead of loading it from a CDN, import the ones you use as side effects so
+they are registered from the package rather than fetched at runtime:
+
+```js
+import "ace-builds/src-noconflict/ace"
+import "ace-builds/src-noconflict/theme-monokai"
+import "ace-builds/src-noconflict/mode-fsharp"
+```
 
 ## Usage
 
@@ -108,9 +126,9 @@ module Demo =
         editor.Focus()
 ```
 
-Collect the generated head (the `AssemblyWide` Ace resource) into the page as
-described in the [WebSharper docs](https://docs.websharper.com); the sample does
-this in `esbuild.config.mjs` by folding `build/*.head.html` into `index.html`.
+The sample imports the npm `ace-builds` core plus the modes and themes it uses
+in `entry.mjs`, then the WebSharper-generated bundle; esbuild bundles everything
+into `dist/Scripts/WebSharper.Ace.Sample.min.js`. No CDN `<script>` is involved.
 
 ## Running the sample
 
@@ -122,21 +140,27 @@ dotnet build WebSharper.Ace.Sample/WebSharper.Ace.Sample.fsproj -c Release
 python3 -m http.server -d dist 8099
 ```
 
-Open <http://localhost:8099/>. The editor loads from jsDelivr; a network
-connection is required the first time.
+Open <http://localhost:8099/>. Ace is fully bundled, so no network access is
+needed.
 
 ## Notes on the API
 
 - **The string form of `Ace.Edit` is an element id, not a selector.** Ace looks
   the element up with `document.getElementById`, so use `Ace.Edit("editor")`
   (not `"#editor"`), or pass the element itself.
-- **Only the classes Ace exposes on the global are constructible.** In the
-  `noconflict` build the `ace` object exposes `Range`, `Editor`, `EditSession`,
-  `UndoManager` and `VirtualRenderer`; those have constructors in the binding.
-  `Document`, `Anchor`, `Selection`, `Tokenizer`, `BackgroundTokenizer`,
-  `TokenIterator`, `Search` and `CommandManager` are obtained from the editor,
-  session or document (for example `session.GetSelection()` or
-  `session.Document`), so they are modelled without constructors.
+- **The binding is npm-based.** `Ace` and its classes (`Range`, `Editor`,
+  `EditSession`, `UndoManager`, `VirtualRenderer`) are ES-imported from
+  `ace-builds/src-noconflict/ace`; nothing is fetched from a CDN.
+- **Only the classes Ace exposes on its export object are constructible.**
+  `Range`, `Editor`, `EditSession`, `UndoManager` and `VirtualRenderer` have
+  constructors; `Document`, `Anchor`, `Selection`, `Tokenizer`,
+  `BackgroundTokenizer`, `TokenIterator`, `Search` and `CommandManager` are
+  obtained from the editor, session or document (for example
+  `session.GetSelection()` or `session.Doc`), so they are modelled without
+  constructors.
+- **Modes, themes and workers must be registered when bundling.** Import the
+  `mode-*`/`theme-*` modules you use (see Installation), and either import or
+  disable Ace's background workers (`EditorOptions.UseWorker <- false`).
 - **Search needles are strings** in the binding (`SearchOptions.Needle`), while
   the editor's `Find` also has a `RegExp` overload.
 - **Union parameters are exposed as overloads.** Where Ace accepts `string |
@@ -190,6 +214,7 @@ WebSharper.Ace.Sample/          # SPA demo/test case
   Client.fs
   index.html
   css/index.css
+  entry.mjs                     # npm ace-builds + modes/themes entry
   esbuild.config.mjs
 docs/
   sample.png                    # screenshot of the running sample
