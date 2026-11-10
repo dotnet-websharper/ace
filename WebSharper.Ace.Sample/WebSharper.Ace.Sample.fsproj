@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Client.fs" />
     <None Include="package.json" />
+    <None Include="entry.mjs" />
     <None Include="esbuild.config.mjs" />
     <None Include="wsconfig.json" />
     <Content Include="index.html" />

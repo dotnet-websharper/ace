@@ -77,20 +77,25 @@ module Definition =
     // so the classes can reference each other freely.
     // -----------------------------------------------------------------
 
+    // Ace is consumed as the npm package `ace-builds`, imported as an ES
+    // module and bundled by the consumer. The `src-noconflict` entry exports
+    // the `ace` object (and its classes) without relying on a `<script>` tag.
+    let aceModule = "ace-builds/src-noconflict/ace"
+
     let Document            = Class "ace.Document"
     let Anchor              = Class "ace.Anchor"
-    let Range               = Class "ace.Range"
-    let EditSession         = Class "ace.EditSession"
+    let Range               = Class "ace.Range" |> Import "Range" aceModule
+    let EditSession         = Class "ace.EditSession" |> Import "EditSession" aceModule
     let Selection           = Class "ace.Selection"
-    let Editor              = Class "ace.Editor"
-    let VirtualRenderer     = Class "ace.VirtualRenderer"
-    let UndoManager         = Class "ace.UndoManager"
+    let Editor              = Class "ace.Editor" |> Import "Editor" aceModule
+    let VirtualRenderer     = Class "ace.VirtualRenderer" |> Import "VirtualRenderer" aceModule
+    let UndoManager         = Class "ace.UndoManager" |> Import "UndoManager" aceModule
     let Tokenizer           = Class "ace.Tokenizer"
     let BackgroundTokenizer = Class "ace.BackgroundTokenizer"
     let TokenIterator       = Class "ace.TokenIterator"
     let Search              = Class "ace.Search"
     let CommandManager      = Class "ace.CommandManager"
-    let Ace                 = Class "ace" |> WithSourceName "Ace"
+    let Ace                 = Class "ace" |> WithSourceName "Ace" |> Import "*" aceModule
 
     // -----------------------------------------------------------------
     // String-union enumerations
@@ -1014,8 +1019,6 @@ module Definition =
             "version" =? String
         ]
 
-    let cdn = "https://cdn.jsdelivr.net/npm/ace-builds@1.45.2/src-min-noconflict/ace.js"
-
     let Assembly =
         Assembly [
             Namespace "WebSharper.Ace" [
@@ -1046,10 +1049,6 @@ module Definition =
                 FoldStyle
                 WrapMethod
                 Ace
-            ]
-            Namespace "WebSharper.Ace.Resources" [
-                Resource "Ace" cdn
-                |> AssemblyWide
             ]
         ]
 
