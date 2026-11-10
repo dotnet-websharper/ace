@@ -12,6 +12,10 @@ bundled by your toolchain (esbuild in the sample) — there is no CDN `<script>`
 tag. The editor is created as usual with `ace.edit(...)`; this binding exposes
 that as `Ace.Edit(...)`.
 
+> **Release line:** this branch (`websharper100`) targets **WebSharper 10** and
+> **.NET 10+**. The [`master`](https://github.com/dotnet-websharper/ace/tree/master)
+> branch targets WebSharper 11 and .NET 11+.
+
 This repository contains:
 
 | Project | Purpose |
@@ -137,8 +141,12 @@ The sample is a static SPA. Building it runs `npm install` and esbuild and emits
 
 ```bash
 dotnet build WebSharper.Ace.Sample/WebSharper.Ace.Sample.fsproj -c Release
-python3 -m http.server -d dist 8099
+dotnet serve -d dist -p 8099
 ```
+
+`dotnet serve` comes from the [`dotnet-serve`](https://github.com/dotnet-serve/dotnet-serve)
+tool; install it once with `dotnet tool install -g dotnet-serve` (or use
+`dotnet tool run dotnet-serve` with a local tool manifest).
 
 Open <http://localhost:8099/>. Ace is fully bundled, so no network access is
 needed.
@@ -179,8 +187,8 @@ changed in this modernization.
 
 ### Prerequisites
 
-- [.NET SDK 10](https://dotnet.microsoft.com/download) or later (the WS11 line
-  needs the .NET 11 runtime for `wsfsc`).
+- [.NET SDK 10](https://dotnet.microsoft.com/download) or later (this branch
+  targets the WebSharper 10 line, whose `wsfsc` runs on .NET 10).
 - [Node.js](https://nodejs.org/) (for the sample's esbuild step).
 
 ### Build
