@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSharper.Ace — sample</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234f46e5'/%3E%3Cpath d='M8 3.2 2.6 12.8h2.2L8 7.2l3.2 5.6h2.2z' fill='white'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- Ace is bundled from npm; the WebSharper head is folded in here. -->
+    
+</head>
+<body>
+    <header class="app-header">
+        <div class="app-titles">
+            <h1>WebSharper.Ace</h1>
+            <p>Ace editor bindings for F# — with <a href="https://websharper.com">WebSharper</a></p>
+        </div>
+        <a class="app-source" href="https://github.com/dotnet-websharper/ace">Source</a>
+    </header>
+
+    <main class="page">
+            <section class="card">
+                <header class="card-header">
+                    <h2>Toolbar</h2>
+                    <p>
+                        Every control below drives the binding: modes and themes,
+                        undo/redo, search &amp; replace, markers, annotations, soft
+                        wrap, invisibles, read-only, goto-line and a small API tour.
+                    </p>
+                </header>
+                <div class="toolbar">
+                    <div class="group">
+                        <span class="label">Mode</span>
+                        <button class="btn" ws-onclick="setModeFsharp">F#</button>
+                        <button class="btn" ws-onclick="setModeJs">JavaScript</button>
+                        <button class="btn" ws-onclick="setModeHtml">HTML</button>
+                        <button class="btn" ws-onclick="setModeJson">JSON</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">Theme</span>
+                        <button class="btn" ws-onclick="setThemeMonokai">Monokai</button>
+                        <button class="btn" ws-onclick="setThemeTextmate">TextMate</button>
+                        <button class="btn" ws-onclick="setThemeGithub">GitHub</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">Edit</span>
+                        <button class="btn" ws-onclick="undo">Undo</button>
+                        <button class="btn" ws-onclick="redo">Redo</button>
+                        <button class="btn" ws-onclick="insertText">Insert text</button>
+                        <button class="btn" ws-onclick="selectAll">Select all</button>
+                        <button class="btn" ws-onclick="clearEditor">Clear</button>
+                        <button class="btn" ws-onclick="focusEditor">Focus</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">Find</span>
+                        <input class="input" type="text" ws-var="findText" placeholder="find..." />
+                        <button class="btn" ws-onclick="findNext">Find next</button>
+                        <input class="input" type="text" ws-var="replaceText" placeholder="replace with..." />
+                        <button class="btn" ws-onclick="replaceAll">Replace all</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">Go to line</span>
+                        <input class="input input-narrow" type="number" min="1" ws-var="gotoLine" />
+                        <button class="btn" ws-onclick="gotoLineBtn">Go</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">Markers</span>
+                        <button class="btn" ws-onclick="addMarker">Add marker</button>
+                        <button class="btn" ws-onclick="addAnnotation">Add annotation</button>
+                        <button class="btn" ws-onclick="clearDecorations">Clear decorations</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">View</span>
+                        <button class="btn" ws-onclick="toggleReadOnly">Toggle read-only</button>
+                        <button class="btn" ws-onclick="toggleWrap">Toggle wrap</button>
+                        <button class="btn" ws-onclick="toggleInvisibles">Toggle invisibles</button>
+                    </div>
+                    <div class="group">
+                        <span class="label">API</span>
+                        <button class="btn btn-primary" ws-onclick="probeApi">Probe Position / Range / Anchor / Token</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <dl class="readout">
+                    <div><dt>Cursor</dt><dd>${cursor}</dd></div>
+                    <div><dt>Selection</dt><dd>${selection}</dd></div>
+                    <div><dt>Document</dt><dd>${info}</dd></div>
+                </dl>
+                <p class="status">${status}</p>
+            </section>
+
+        <section class="card editor-card">
+            <div id="editor"></div>
+        </section>
+    </main>
+
+    <script type="text/javascript" src="Scripts/WebSharper.Ace.Sample.min.js"></script>
+</body>
+</html>
