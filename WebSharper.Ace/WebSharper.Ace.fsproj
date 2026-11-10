@@ -9,5 +9,10 @@
     <Compile Include="Main.fs" />
     <None Include="wsconfig.json" />
   </ItemGroup>
+  <PropertyGroup>
+    <NpmDependencies>
+      <NpmPackage Name="ace-builds" Version="gt= 1.45.2 lt 1.46.0" ResolutionStrategy="Max" />
+    </NpmDependencies>
+  </PropertyGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
