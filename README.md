@@ -13,7 +13,7 @@ tag. The editor is created as usual with `ace.edit(...)`; this binding exposes
 that as `Ace.Edit(...)`.
 
 > **Release line:** this branch (`websharper100`) targets **WebSharper 10** and
-> **.NET 10+**. The [`master`](https://github.com/dotnet-websharper/ace/tree/master)
+> **.NET 10+**. The [`main`](https://github.com/dotnet-websharper/ace/tree/main)
 > branch targets WebSharper 11 and .NET 11+.
 
 This repository contains:
@@ -209,7 +209,7 @@ dotnet paket pack ./nuget
 
 ## Deployment
 
-Pushing to `master` triggers `.github/workflows/ghpages.yml`, which builds the
+Pushing to `main` triggers `.github/workflows/ghpages.yml`, which builds the
 sample in Release and publishes `dist/` to the `gh-pages` branch.
 
 ## Repository layout
