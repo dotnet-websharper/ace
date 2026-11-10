@@ -12,7 +12,7 @@ bundled by your toolchain (esbuild in the sample) — there is no CDN `<script>`
 tag. The editor is created as usual with `ace.edit(...)`; this binding exposes
 that as `Ace.Edit(...)`.
 
-> **Release line:** this branch (`master`) targets **WebSharper 11** and
+> **Release line:** this branch (`main`) targets **WebSharper 11** and
 > **.NET 11+**. The [`websharper100`](https://github.com/dotnet-websharper/ace/tree/websharper100)
 > branch targets WebSharper 10 and .NET 10+.
 
@@ -209,7 +209,7 @@ dotnet paket pack ./nuget
 
 ## Deployment
 
-Pushing to `master` triggers `.github/workflows/ghpages.yml`, which builds the
+Pushing to `main` triggers `.github/workflows/ghpages.yml`, which builds the
 sample in Release and publishes `dist/` to the `gh-pages` branch.
 
 ## Repository layout
